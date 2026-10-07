@@ -1,0 +1,211 @@
+/* 1. Reset & Global Box-Sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 2. Body Styles */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  line-height: 1.6;
+  background-color: #f4f6f8;
+  color: #333333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* 3. Header Styles */
+header {
+  background-color: #2c3e50;
+  color: #ffffff;
+  text-align: center;
+  padding: 2.5rem 1rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+header p {
+  font-size: 1.1rem;
+  color: #ecf0f1;
+}
+
+/* 4. Main Content Area & Section Cards */
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+section {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+section h2 {
+  font-size: 1.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.25rem;
+  border-bottom: 2px solid #f0f0f0;
+  padding-bottom: 0.5rem;
+}
+
+/* 5. Form Styles (Flexbox Layout) */
+#note-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: flex-end;
+}
+
+#note-form > div {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 200px;
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+  font-size: 0.9rem;
+  color: #555555;
+}
+
+input[type="text"],
+select {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 100%;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus,
+select:focus {
+  border-color: #3498db;
+}
+
+/* 6. Buttons & Hover Styles */
+button,
+input[type="submit"] {
+  background-color: #3498db;
+  color: #ffffff;
+  border: none;
+  padding: 0.65rem 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:hover,
+input[type="submit"]:hover {
+  background-color: #2980b9;
+}
+
+button:active,
+input[type="submit"]:active {
+  transform: scale(0.98);
+}
+
+/* 7. Validation Error Message */
+#error-message {
+  color: #e74c3c;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-top: 0.75rem;
+  min-height: 1.2rem;
+}
+
+/* 8. Search & Count Controls */
+#search-input {
+  margin-bottom: 1rem;
+}
+
+#note-count {
+  font-size: 0.95rem;
+  color: #666666;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+/* 9. Notes List & Note Card Styles */
+#notes-list {
+  list-style: none;
+}
+
+.note-card {
+  padding: 1rem 1.25rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  background-color: #fafafa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.note-card p {
+  font-size: 1rem;
+  color: #2c3e50;
+  word-break: break-word;
+}
+
+/* 10. Category Specific Styles (Left Border Accent) */
+.category-personal {
+  border-left: 6px solid #008080; /* Teal */
+}
+
+.category-work {
+  border-left: 6px solid #8b0000; /* Dark Red */
+}
+
+.category-study {
+  border-left: 6px solid #0000ff; /* Blue */
+}
+
+/* 11. Footer Styles */
+footer {
+  text-align: center;
+  padding: 1.5rem;
+  background-color: #ecf0f1;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  margin-top: auto;
+}
+
+/* 12. Media Query for Small Screens */
+@media (max-width: 600px) {
+  #note-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #note-form > div {
+    flex: 1 1 100%;
+  }
+
+  button,
+  input[type="submit"] {
+    width: 100%;
+  }
+
+  section {
+    padding: 1.25rem 1rem;
+  }
+}
