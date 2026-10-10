@@ -1,121 +1,101 @@
-// DOM Element Selections
-const noteForm = document.querySelector('#note-form');
-const noteInput = document.querySelector('#note-input');
-const categorySelect = document.querySelector('#category-select');
-const searchInput = document.querySelector('#search-input');
-const notesContainer = document.querySelector('#notes-container');
+// 1. Select elements using querySelector (updated to match #notes-list)
+const form = document.querySelector('#note-form');
+const textInput = document.querySelector('#note-text');
+const categorySelect = document.querySelector('#note-category');
+const notesList = document.querySelector('#notes-list');
 const errorMessage = document.querySelector('#error-message');
-const noteCount = document.querySelector('#note-count');
+const noteCountEl = document.querySelector('#note-count');
 
-// State: Load notes from localStorage or initialize empty array
-let notes = JSON.parse(localStorage.getItem('notes')) || [];
+// 2. Notes array to store note objects
+let notes = [];
 
-// Helper function to generate a readable date and time string
-function getReadableTimestamp() {
+// Helper function to generate a readable date and time
+function getReadableDate() {
   const now = new Date();
   return now.toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
+    dateStyle: 'medium',
+    timeStyle: 'short'
   });
 }
 
-// Save notes array to localStorage
-function saveNotes() {
-  localStorage.setItem('notes', JSON.stringify(notes));
-}
-
-// Update the note count message based on current filter or total notes
-function updateCount(displayedCount, totalCount) {
-  if (totalCount === 0) {
-    noteCount.textContent = 'No notes yet.';
-  } else if (totalCount === 1) {
-    noteCount.textContent = '1 note total.';
+// Update note count text dynamically
+function updateNoteCount() {
+  if (notes.length === 0) {
+    noteCountEl.textContent = 'You have no notes yet.';
+  } else if (notes.length === 1) {
+    noteCountEl.textContent = 'You have 1 note.';
   } else {
-    if (displayedCount !== totalCount) {
-      noteCount.textContent = `Showing ${displayedCount} of ${totalCount} notes.`;
-    } else {
-      noteCount.textContent = `${totalCount} notes total.`;
-    }
+    noteCountEl.textContent = `You have ${notes.length} notes.`;
   }
 }
 
-// Delete note by id
-function deleteNote(id) {
-  notes = notes.filter(note => note.id !== id);
-  saveNotes();
-  render();
-}
-
-// Render function to rebuild the UI list from the notes array
+// 3. Render function using createElement and textContent (never innerHTML for user text)
 function render() {
-  // Clear existing DOM list
-  notesContainer.replaceChildren();
+  // Clear the current list contents safely
+  notesList.textContent = '';
 
-  const searchTerm = searchInput.value.toLowerCase().trim();
+  // Update the count display
+  updateNoteCount();
 
-  // Filter notes by search term (matching text or category)
-  const filteredNotes = notes.filter(note => 
-    note.text.toLowerCase().includes(searchTerm) || 
-    note.category.toLowerCase().includes(searchTerm)
-  );
-
-  // Build DOM elements for each note using createElement and textContent (never innerHTML for user text)
-  filteredNotes.forEach(note => {
+  notes.forEach((note) => {
+    // Create note card container
     const card = document.createElement('div');
     card.className = 'note-card';
 
+    // Small category label
+    const categoryLabel = document.createElement('span');
+    categoryLabel.textContent = note.category;
+    categoryLabel.className = 'category-label';
+
+    // Note text
     const textEl = document.createElement('p');
-    textEl.className = 'note-text';
     textEl.textContent = note.text;
+    textEl.className = 'note-text';
 
-    const metaContainer = document.createElement('div');
-    metaContainer.className = 'note-meta';
-
-    const categoryEl = document.createElement('span');
-    categoryEl.className = 'note-category';
-    categoryEl.textContent = note.category;
-
-    const dateEl = document.createElement('span');
-    dateEl.className = 'note-date';
+    // Date and time
+    const dateEl = document.createElement('small');
     dateEl.textContent = note.createdAt;
+    dateEl.className = 'note-date';
 
-    metaContainer.append(categoryEl, dateEl);
-
+    // Delete button (removes its specific note)
     const deleteBtn = document.createElement('button');
-    deleteBtn.className = 'delete-btn';
     deleteBtn.textContent = 'Delete';
-    deleteBtn.addEventListener('click', () => deleteNote(note.id));
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.addEventListener('click', () => {
+      deleteNote(note.id);
+    });
 
-    card.append(textEl, metaContainer, deleteBtn);
-    notesContainer.appendChild(card);
+    // Append elements to the card
+    card.appendChild(categoryLabel);
+    card.appendChild(textEl);
+    card.appendChild(dateEl);
+    card.appendChild(deleteBtn);
+
+    // Append card to the main list container
+    notesList.appendChild(card);
   });
-
-  updateCount(filteredNotes.length, notes.length);
 }
 
-// Event Listener for Adding Notes with Validation
-noteForm.addEventListener('submit', (e) => {
+// 4. Handle form submission & validation
+form.addEventListener('submit', (e) => {
   e.preventDefault();
-  
-  const text = noteInput.value.trim();
+
+  const text = textInput.value.trim();
   const category = categorySelect.value;
 
-  // Validation checks
+  // Validation: Check if empty or only spaces
   if (text === '') {
-    errorMessage.textContent = 'Error: Note cannot be empty.';
+    errorMessage.textContent = 'Please type a note first.';
     return;
   }
 
+  // Validation: Check if over 200 characters
   if (text.length > 200) {
-    errorMessage.textContent = 'Error: Note cannot exceed 200 characters.';
+    errorMessage.textContent = 'Notes must be 200 characters or fewer.';
     return;
   }
 
-  // Clear any existing error messages
+  // Clear error message when validation passes
   errorMessage.textContent = '';
 
   // Create new note object
@@ -123,21 +103,22 @@ noteForm.addEventListener('submit', (e) => {
     id: Date.now().toString(),
     text: text,
     category: category,
-    createdAt: getReadableTimestamp()
+    createdAt: getReadableDate()
   };
 
-  // Add to array, save, re-render, and clear input
+  // Add to array and re-render
   notes.push(newNote);
-  saveNotes();
   render();
 
-  noteInput.value = '';
+  // Clear the input after adding
+  textInput.value = '';
 });
 
-// Event Listener for Search Feature
-searchInput.addEventListener('input', () => {
+// Delete note handler
+function deleteNote(id) {
+  notes = notes.filter((note) => note.id !== id);
   render();
-});
+}
 
-// Initial render on page load
+// Initial render call
 render();
