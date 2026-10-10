@@ -2,52 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Note Taking App</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="script.js" defer></script>
+  <title>Notes App</title>
 </head>
 <body>
+  <form id="note-form">
+    <textarea id="note-text" placeholder="Write your note here..."></textarea>
+    <select id="note-category">
+      <option value="Personal">Personal</option>
+      <option value="Work">Work</option>
+      <option value="Ideas">Ideas</option>
+    </select>
+    <button type="submit">Add Note</button>
+  </form>
 
-  <header>
-    <h1>Note Taking App</h1>
-    <p>Organize your thoughts and stay productive</p>
-  </header>
+  <!-- Error message container -->
+  <div id="error-message" style="color: red; margin: 10px 0;"></div>
 
-  <main>
-    <section>
-      <h2>Add a note</h2>
-      <form id="note-form">
-        <div>
-          <label for="note-input">Note Content:</label>
-          <input type="text" id="note-input" name="note-input" placeholder="Enter your note here..." required>
-        </div>
+  <!-- Note count container -->
+  <p id="note-count"></p>
 
-        <div>
-          <label for="note-category">Category:</label>
-          <select id="note-category" name="note-category">
-            <option value="Personal">Personal</option>
-            <option value="Work">Work</option>
-            <option value="Study">Study</option>
-          </select>
-        </div>
+  <div id="notes-container"></div>
 
-        <button type="submit">Add Note</button>
-      </form>
-      <p id="error-message"></p>
-    </section>
-
-    <section>
-      <h2>Your notes</h2>
-      <input type="text" id="search-input" placeholder="Search notes...">
-      <p id="note-count">Total notes: 0</p>
-      <ul id="notes-list"></ul>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2026 Note Taking App. All rights reserved.</p>
-  </footer>
-
+  <script src="script.js"></script>
 </body>
 </html>
